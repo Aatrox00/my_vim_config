@@ -1,0 +1,119 @@
+filetype on
+set nu
+set tabstop=4
+set shiftwidth=4
+syntax on
+colorscheme sublimemonokai 
+"启用鼠标	
+set mouse=a
+set selection=exclusive
+set selectmode=mouse,key
+
+set ruler
+set completeopt=longest,menu
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+
+Plugin 'VundleVim/Vundle.vim'
+
+Plugin 'The-NERD-tree'
+map <F2> :NERDTree<cr>
+let NERDTreeWinsize=25
+
+Plugin 'zxqfl/tabnine-vim'
+
+call vundle#end()
+
+"键盘命令
+let mapleader=","
+nmap <leader>w :w!<cr>
+nmap <leader>f :find<cr>
+map <space> /
+map <C-space> ?
+
+" 编译运行cpp、python、java等文件
+nmap <leader>ca :w <CR>:!python3 % <CR>
+nmap <leader>cc :w <CR>:!clang++ -g % -o %:r.out && ./%:r.out <CR> 
+nmap <leader>aa :w <CR>:!chmod +x %<CR>:q<CR>  
+
+
+
+"设置在状态行显示的信息
+set foldcolumn=0
+set foldmethod=indent
+set foldlevel=3
+set foldenable
+
+set nocompatible
+set autoindent
+set si
+set wrap
+
+"禁止生成临时文件
+set nobackup
+set noswapfile
+
+set ignorecase
+set hlsearch
+set incsearch
+set enc=utf-8
+
+set showmatch
+set matchtime=1
+
+
+"linebreak on 500 characters
+set lbr
+set tw=500
+
+set bg=dark
+
+"自动补齐括号
+:inoremap ( ()<ESC>i
+:inoremap ) <c-r>=ClosePair(')')<CR>
+:inoremap { {}<ESC>i
+:inoremap } <c-r>=ClosePair('}')<CR>
+:inoremap [ []<ESC>i
+:inoremap ] <c-r>=ClosePair(']')<CR>
+:inoremap " ""<ESC>i
+:inoremap ' ''<ESC>i
+function! ClosePair(char)
+    if getline('.')[col('.') - 1] == a:char
+		        return "\<Right>"
+	else
+			    return a:char
+	endif
+endfunction
+
+
+
+" CPP文件模板
+autocmd BufNewFile *.cpp exec ":call SetCpp()"
+    func SetCpp()
+        call setline(1,"#include <iostream>") 
+        call append(line("."), "#include <vector>")
+        call append(line(".")+1, "#include <string>") 
+        call append(line(".")+2, "#include <algorithm> ") 
+        call append(line(".")+3, "using namespace std;")
+        call append(line(".")+4, "")
+        call append(line(".")+5, "int main(int argc, char* argv[]){")
+        call append(line(".")+6, "     ")
+        call append(line(".")+7, "    return 0;") 
+        call append(line(".")+8, "}") 
+    endfunc
+autocmd BufNewFile *.cpp normal 8gg 
+
+"bash template
+autocmd BufNewFile *.sh exec ":call SetSh()"
+	func SetSh()
+        call setline(1,"#!/bin/bash") 
+	endfunc
+
+"python3 template
+autocmd BufNewFile *.py exec ":call SetPy()"
+	func SetPy()
+        call setline(1,"#!/bin/python3") 
+	endfunc
+
+
+
